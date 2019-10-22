@@ -1,39 +1,56 @@
 Vagrant.configure("2") do |config|
-#  config.vm.box = "rhel7.1"
-#  config.vm.box_url = "file:///vagrant/images/rhel-server-libvirt-7.1-1.x86_64.box"
-
-  # Define host settings
-#  config.vm.hostname = "master.lab.example.com"
-
 
   config.vm.provider :libvirt do |domain|
-    domain.memory = 4096
-    domain.cpus = 2
+    domain.memory = 2048 
+    domain.cpus = 1
   end
 
   # Define sync folder(s)
 
   # Define shell provisioner
   config.vm.provision "shell", inline: <<-SHELL
-    
+    cat /tmp/hosts >> /etc/hosts
+    sudo useradd -m -d /home/devops -s /bin/bash devops
+    echo "devops:devops" | sudo chpasswd
+    sudo useradd -m -d /home/ansible -s /bin/bash ansible
+    echo "ansible:ansible" | sudo chpasswd
+    sudo sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/" /etc/ssh/sshd_config 
+    sudo systemctl restart sshd
   SHELL
 
-  config.vm.define "master" do |master|
-    master.vm.box = "rhel7.1"
-    master.vm.box_url = "file:///vagrant/images/rhel-server-libvirt-7.1-1.x86_64.box"
-    master.vm.hostname = "master.lab.example.com"
+  config.vm.define "control" do |control|
+    control.vm.box = "generic/centos7"
+    control.vm.hostname = "control.lab.example.com"
+    control.vm.network "private_network", ip: "10.0.0.10"
+    control.vm.synced_folder "src/", "/tmp"
   end
-
-  config.vm.define "node1" do |node1|
-    node1.vm.box = "rhel7.1"
-    node1.vm.box_url = "file:///vagrant/images/rhel-server-libvirt-7.1-1.x86_64.box"
-    node1.vm.hostname = "node1.lab.example.com"
+  config.vm.define "servera" do |servera|
+    servera.vm.box = "generic/centos7"
+    servera.vm.hostname = "servera.lab.example.com"
+    servera.vm.network "private_network", ip: "10.0.0.20"
+    servera.vm.synced_folder "src/", "/tmp"
   end
+  config.vm.define "serverb" do |serverb|
+    serverb.vm.box = "generic/centos7"
+    serverb.vm.hostname = "serverb.lab.example.com"
+    serverb.vm.network "private_network", ip: "10.0.0.30"
+    serverb.vm.synced_folder "src/", "/tmp"
+  end
+  config.vm.define "serverc" do |serverc|
+    serverc.vm.box = "generic/centos7"
+    serverc.vm.hostname = "serverc.lab.example.com"
+    serverc.vm.network "private_network", ip: "10.0.0.40"
+    serverc.vm.synced_folder "src/", "/tmp"
+  end
+  config.vm.define "serverd" do |serverd|
+    serverd.vm.box = "generic/ubuntu1804"
+    serverd.vm.network "private_network", ip: "10.0.0.50", auto_config: false
+    serverd.vm.synced_folder "src/", "/tmp"
 
-  config.vm.define "node2" do |node2|
-    node2.vm.box = "rhel7.1"
-    node2.vm.box_url = "file:///vagrant/images/rhel-server-libvirt-7.1-1.x86_64.box"
-    node2.vm.hostname = "node2.lab.example.com"
+    config.vm.provision "shell", inline: <<-SHELL
+     ifconfig eth1 10.0.0.50 netmask 255.255.255.0 up
+    SHELL
+
   end
 
   # Define puppet_server provisioner
