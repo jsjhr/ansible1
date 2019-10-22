@@ -1,0 +1,41 @@
+Vagrant.configure("2") do |config|
+#  config.vm.box = "rhel7.1"
+#  config.vm.box_url = "file:///vagrant/images/rhel-server-libvirt-7.1-1.x86_64.box"
+
+  # Define host settings
+#  config.vm.hostname = "master.lab.example.com"
+
+
+  config.vm.provider :libvirt do |domain|
+    domain.memory = 4096
+    domain.cpus = 2
+  end
+
+  # Define sync folder(s)
+
+  # Define shell provisioner
+  config.vm.provision "shell", inline: <<-SHELL
+    
+  SHELL
+
+  config.vm.define "master" do |master|
+    master.vm.box = "rhel7.1"
+    master.vm.box_url = "file:///vagrant/images/rhel-server-libvirt-7.1-1.x86_64.box"
+    master.vm.hostname = "master.lab.example.com"
+  end
+
+  config.vm.define "node1" do |node1|
+    node1.vm.box = "rhel7.1"
+    node1.vm.box_url = "file:///vagrant/images/rhel-server-libvirt-7.1-1.x86_64.box"
+    node1.vm.hostname = "node1.lab.example.com"
+  end
+
+  config.vm.define "node2" do |node2|
+    node2.vm.box = "rhel7.1"
+    node2.vm.box_url = "file:///vagrant/images/rhel-server-libvirt-7.1-1.x86_64.box"
+    node2.vm.hostname = "node2.lab.example.com"
+  end
+
+  # Define puppet_server provisioner
+
+end
