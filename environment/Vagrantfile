@@ -16,6 +16,10 @@ Vagrant.configure("2") do |config|
     echo "ansible:ansible" | sudo chpasswd
     sudo sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/" /etc/ssh/sshd_config 
     sudo systemctl restart sshd
+    if [ -f /usr/bin/yum ]; then
+      sudo yum clean all && rm -fr /var/cache/yum/*
+    fi
+    sudo cp -v /tmp/perfilado /etc/sudoers.d/
   SHELL
 
   config.vm.define "control" do |control|
