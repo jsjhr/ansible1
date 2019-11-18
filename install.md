@@ -131,7 +131,7 @@ f) RED & NOMBRE DE EQUIPO:
 
 g) Presionar el boton "Empezar instalacion".
 
-h) Presionar sobre "CONTRASEÑA DE ROOT" Y configurarla en redhat123
+h) Presionar sobre "CONTRASEÑA DE ROOT" Y configurarla en centos 
 
 i) Esperar a que termine de realizarse la instalacion.
 

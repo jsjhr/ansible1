@@ -48,9 +48,6 @@ b) Descargar box's vagrant
 
  # vagrant  box  add generic/centos7 https://vagrantcloud.com/generic/centos7 \
    --provider=libvirt
- # vagrant box add \
-   generic/ubuntu1804 https://vagrantcloud.com/generic/ubuntu1804 \
-   --provider=libvirt
    
 
 3) DESPLEGAR AMBIENTE
