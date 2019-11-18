@@ -47,13 +47,18 @@ Vagrant.configure("2") do |config|
     serverc.vm.synced_folder "src/", "/tmp"
   end
   config.vm.define "serverd" do |serverd|
-    serverd.vm.box = "generic/ubuntu1804"
-    serverd.vm.network "private_network", ip: "10.0.0.50", auto_config: false
+    serverd.vm.box = "generic/centos7"
+    serverd.vm.hostname = "serverd.lab.example.com"
+    serverd.vm.network "private_network", ip: "10.0.0.50"
     serverd.vm.synced_folder "src/", "/tmp"
 
-    config.vm.provision "shell", inline: <<-SHELL
-     ifconfig eth1 10.0.0.50 netmask 255.255.255.0 up
-    SHELL
+    #serverd.vm.box = "generic/ubuntu1804"
+    #serverd.vm.network "private_network", ip: "10.0.0.50", auto_config: false
+    #serverd.vm.synced_folder "src/", "/tmp"
+
+    #config.vm.provision "shell", inline: <<-SHELL
+    # ifconfig eth1 10.0.0.50 netmask 255.255.255.0 up
+    #SHELL
 
   end
 
